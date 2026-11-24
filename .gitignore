@@ -1,0 +1,21 @@
+/data/
+/results/
+*.rar
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+.idea/
+.vscode/
+
+~$*
+Thumbs.db
+.DS_Store
+
+# Local course handouts and working notes
+/Final-term Project 2026.pdf
+/Proposal/
+/Preliminary Report/Assignment - Preliminary Report Submission.doc
+/Preliminary Report/完成情况.md
+/Preliminary Report/build_report_tmp.py

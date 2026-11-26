@@ -29,6 +29,7 @@ Run the scripts in order from the repository root. Each script derives its defau
 .\.venv\Scripts\python preprocess.py
 .\.venv\Scripts\python experiment.py
 .\.venv\Scripts\python extension.py
+.\.venv\Scripts\python optimize.py
 .\.venv\Scripts\python inspect_results.py
 ```
 
@@ -37,6 +38,7 @@ Run the scripts in order from the repository root. Each script derives its defau
 | `preprocess.py` | Frame pairing audit and CAN feature table in `results/` |
 | `experiment.py` | Grouped fold assignments, logistic and random-forest comparisons, predictions and fitted models |
 | `extension.py` | Ratio and concentration features, random-forest and boosting comparisons, and paired uncertainty intervals in `results/extension/` |
+| `optimize.py` | Window statistics and vehicle dynamics, grouped model selection for random forest, Extra Trees, RBF-SVM and XGBoost, and test comparisons in `results/optimization/` |
 | `inspect_results.py` | Error breakdown and camera/CAN examples for the base random-forest experiment |
 
 The scripts preserve the supplied Train/Test split. The 2,409 usable training frames are grouped into five stratified folds by clip and timestamp overlap. The 473 usable test frames are scored with hyperparameters and alert thresholds chosen within Train. Generated tables, plots and fitted models stay in `results/`.
@@ -48,8 +50,12 @@ The scripts preserve the supplied Train/Test split. The 2,409 usable training fr
 | Constant prior | — | 0.207 | 0.000 |
 | Logistic regression, C | 0.599 | 0.300 | 0.172 |
 | Random forest, C | 0.804 | 0.401 | 0.374 |
-| Random forest, C + ratios | **0.818** | **0.421** | 0.457 |
+| Random forest, C + ratios | 0.818 | 0.421 | 0.457 |
 | XGBoost, C + ratios + concentration | 0.800 | 0.359 | 0.418 |
-| HistGradientBoosting, C | 0.786 | 0.302 | **0.466** |
+| HistGradientBoosting, C | 0.786 | 0.302 | 0.466 |
+| Extra Trees, C + ratios + window statistics + dynamics | **0.82647** | 0.355 | 0.420 |
+| Random forest, C + ratios + dynamics | 0.82611 | 0.402 | 0.492 |
+| XGBoost, C + ratios + window statistics | 0.809 | 0.285 | 0.382 |
+| RBF-SVM, C + ratios + dynamics | 0.795 | **0.504** | **0.555** |
 
-Set C contains signal means, torque variability, the lane-confidence gap and the mean absolute curvature residual. Adding ratio features to the forest detected 67 of 98 anomalies while producing 128 false alerts. Its test AP improvement over the C forest was +0.020, with a paired 95% interval of −0.036 to +0.102. The test split was reused for comparison, so this estimate is exploratory.
+Set C contains signal means, torque variability, the lane-confidence gap and the mean absolute curvature residual. Extra Trees led grouped validation. RBF-SVM led the test comparison and detected 78 of 98 anomalies with 105 false alerts. Its test AP difference against the random forest with ratio features was +0.082, with a paired 95% interval of −0.121 to +0.238. The test split was reused for comparison, so the test ranking is exploratory.
